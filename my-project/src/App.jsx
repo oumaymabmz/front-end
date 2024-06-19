@@ -6,18 +6,29 @@ import HomePage from './HomePage';
 import HouseList from './HouseList';
 import CarList from './CarList';
 import ActivityList from './ActivityList';
+import Login from './Login';
+import CreateAccount from './CreateAccount';
+import Cart from './Cart';
+import ForgotPassword from './ForgotPassword';
+import LocationMap from './LocationMap';
 
 const App = () => {
   const [items, setItems] = useState([]);
+  const [language, setLanguage] = useState('en');
 
   return (
     <Router>
       <Routes>
-        <Route path="/admin/*" element={<AdminDashboard items={items} />} />
-        <Route path="/" element={<HomePage />} />
-        <Route path="/houses" element={<HouseList items={items} />} />
-        <Route path="/cars" element={<CarList items={items} />} />
-        <Route path="/activities" element={<ActivityList items={items} />} />
+        <Route exact path="/" element={<HomePage language={language} setLanguage={setLanguage} />} />
+        <Route path="/admin/*" element={<AdminDashboard items={items} language={language} />} />
+        <Route path="/login" element={<Login language={language} />} />
+        <Route path="/create-account" element={<CreateAccount language={language} />} />
+        <Route path="/houses" element={<HouseList items={items} language={language} />} />
+        <Route path="/cars" element={<CarList items={items} language={language} />} />
+        <Route path="/activities" element={<ActivityList items={items} language={language} />} />
+        <Route path="/cart" element={<Cart language={language} />} />
+        <Route path="/forgot-password" element={<ForgotPassword language={language} />} />
+        <Route path="/location-map" element={<LocationMap language={language} />} />
       </Routes>
     </Router>
   );

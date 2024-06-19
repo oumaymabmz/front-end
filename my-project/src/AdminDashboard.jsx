@@ -56,6 +56,9 @@ const AdminDashboard = () => {
           <Route path="add-car" element={<AddItem category="car" onAddItem={handleAddItem} />} />
           <Route path="add-activity" element={<AddItem category="activity" onAddItem={handleAddItem} />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="houses" element={<HouseList items={items} />} />
+          <Route path="cars" element={<CarList items={items} />} />
+          <Route path="activities" element={<ActivityList items={items} />} />
         </Routes>
       </main>
     </div>

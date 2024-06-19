@@ -10,11 +10,16 @@ const AddItem = ({ category, onAddItem }) => {
     category: category,
     image: null,
     rating: 0,
+    availability: { start: '', end: '' },
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+      availability: { ...prevData.availability, [name]: value }
+    }));
   };
 
   const handleFileChange = (e) => {
@@ -41,6 +46,7 @@ const AddItem = ({ category, onAddItem }) => {
       category: category,
       image: null,
       rating: 0,
+      availability: { start: '', end: '' },
     });
   };
 
@@ -101,6 +107,28 @@ const AddItem = ({ category, onAddItem }) => {
             min="0"
             max="5"
             step="0.1"
+            className="w-full p-2 border border-gray-300 rounded text-black"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Availability Start</label>
+          <input
+            type="date"
+            name="start"
+            value={formData.availability.start}
+            onChange={handleChange}
+            className="w-full p-2 border border-gray-300 rounded text-black"
+            required
+          />
+        </div>
+        <div>
+          <label className="block text-gray-700">Availability End</label>
+          <input
+            type="date"
+            name="end"
+            value={formData.availability.end}
+            onChange={handleChange}
             className="w-full p-2 border border-gray-300 rounded text-black"
             required
           />
