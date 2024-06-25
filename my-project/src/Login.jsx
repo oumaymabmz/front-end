@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
+import FacebookLogin from 'react-facebook-login';
+import { useLanguage } from './LanguageContext';
+import Navbar from './Navbar';
 
 const Login = () => {
+  const { language, setLanguage } = useLanguage();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
@@ -11,31 +16,21 @@ const Login = () => {
     // Handle login logic here
   };
 
+  const handleGoogleLogin = (response) => {
+    // Handle Google login logic here
+    console.log(response);
+  };
+
+  const handleFacebookLogin = (response) => {
+    // Handle Facebook login logic here
+    console.log(response);
+  };
+
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/assets/back.png')" }}>
-      <header className="absolute top-0 left-0 w-full z-10 bg-gray-800 bg-opacity-50 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-white">
-            Djerba Dream Land
-          </Link>
-          <nav>
-            <ul className="flex space-x-4">
-              <li><Link to="/" className="hover:text-green-500 transition duration-300 text-white">Home</Link></li>
-              <li><Link to="/houses" className="hover:text-green-500 transition duration-300 text-white">House Rental</Link></li>
-              <li><Link to="/cars" className="hover:text-green-500 transition duration-300 text-white">Car Rental</Link></li>
-              <li><Link to="/activities" className="hover:text-green-500 transition duration-300 text-white">Activities</Link></li>
-              <li><Link to="/cart" className="hover:text-green-500 transition duration-300 text-white flex items-center space-x-1">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5H4M7 13l-2 5a1 1 0 001 1h12a1 1 0 001-1l-2-5M5 21h2M17 21h2M9 21h6" />
-                </svg>
-                <span>Cart</span>
-              </Link></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
+      <Navbar language={language} setLanguage={setLanguage} transparent />
       <div className="bg-white bg-opacity-70 p-8 rounded shadow-lg max-w-md w-full mt-16 transition duration-500">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
+        <h2 className="text-2xl font-bold mb-4">{language === 'en' ? 'Login' : language === 'fr' ? 'Connexion' : 'Anmelden'}</h2>
         <form onSubmit={handleLogin}>
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
@@ -49,7 +44,7 @@ const Login = () => {
             />
           </div>
           <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">{language === 'en' ? 'Password' : language === 'fr' ? 'Mot de passe' : 'Passwort'}</label>
             <input
               type="password"
               id="password"
@@ -68,14 +63,43 @@ const Login = () => {
               className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
             />
             <label htmlFor="remember" className="ml-2 block text-sm text-gray-900">
-              Remember me
+              {language === 'en' ? 'Remember me' : language === 'fr' ? 'Souviens-toi de moi' : 'Erinnere dich an mich'}
             </label>
           </div>
-          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded transition duration-300 hover:bg-blue-700">Login</button>
+          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded transition duration-300 hover:bg-blue-700">{language === 'en' ? 'Login' : language === 'fr' ? 'Connexion' : 'Anmelden'}</button>
         </form>
         <div className="mt-4 flex justify-between">
-          <Link to="/forgot-password" className="text-blue-600">Forgot Password?</Link>
-          <Link to="/create-account" className="text-blue-600">Register</Link>
+          <Link to="/forgot-password" className="text-blue-600">{language === 'en' ? 'Forgot Password?' : language === 'fr' ? 'Mot de passe oublié?' : 'Passwort vergessen?'}</Link>
+          <Link to="/create-account" className="text-blue-600">{language === 'en' ? 'Register' : language === 'fr' ? 'S\'inscrire' : 'Registrieren'}</Link>
+        </div>
+        <div className="mt-4 flex flex-col space-y-4">
+          <GoogleLogin
+            onSuccess={handleGoogleLogin}
+            onError={() => {
+              console.log('Login Failed');
+            }}
+            render={(renderProps) => (
+              <button
+                onClick={renderProps.onClick}
+                disabled={renderProps.disabled}
+                className="flex items-center justify-center w-full bg-red-500 text-white p-2 rounded transition duration-300 hover:bg-red-600"
+              >
+                <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 11.02v2.49h7.06c-.31 1.56-1.56 3.61-3.06 4.48l-.04.27 4.44 3.44.32-.03c1.9-1.73 3.22-4.26 3.22-7.33 0-.82-.08-1.62-.23-2.38H12z" />
+                </svg>
+                <span>{language === 'en' ? 'Sign in with Google' : language === 'fr' ? 'Se connecter avec Google' : 'Mit Google anmelden'}</span>
+              </button>
+            )}
+          />
+          <FacebookLogin
+            appId="your-facebook-app-id"
+            autoLoad={false}
+            fields="name,email,picture"
+            callback={handleFacebookLogin}
+            icon="fa-facebook"
+            cssClass="flex items-center justify-center w-full bg-blue-800 text-white p-2 rounded transition duration-300 hover:bg-blue-900"
+            textButton={language === 'en' ? 'Sign in with Facebook' : language === 'fr' ? 'Se connecter avec Facebook' : 'Mit Facebook anmelden'}
+          />
         </div>
       </div>
     </div>

@@ -1,42 +1,53 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useLanguage } from './LanguageContext';
 
 const ForgotPassword = () => {
+  const { language } = useLanguage();
   const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
 
-  const handleForgotPassword = (e) => {
+  const handleForgotPassword = async (e) => {
     e.preventDefault();
-    // Handle forgot password logic here
+
+    // Example API call - replace with your actual API endpoint
+    try {
+      const response = await fetch('https://your-api-endpoint.com/forgot-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+
+      if (response.ok) {
+        setMessage(language === 'en' ? 'Password reset link has been sent to your email.' : language === 'fr' ? 'Le lien de réinitialisation du mot de passe a été envoyé à votre adresse e-mail.' : 'Der Link zum Zurücksetzen des Passworts wurde an Ihre E-Mail-Adresse gesendet.');
+        setError('');
+      } else {
+        setError(language === 'en' ? 'Failed to send password reset link. Please try again.' : language === 'fr' ? 'Échec de l\'envoi du lien de réinitialisation du mot de passe. Veuillez réessayer.' : 'Das Senden des Links zum Zurücksetzen des Passworts ist fehlgeschlagen. Bitte versuchen Sie es erneut.');
+        setMessage('');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      setError(language === 'en' ? 'Failed to send password reset link. Please try again.' : language === 'fr' ? 'Échec de l\'envoi du lien de réinitialisation du mot de passe. Veuillez réessayer.' : 'Das Senden des Links zum Zurücksetzen des Passworts ist fehlgeschlagen. Bitte versuchen Sie es erneut.');
+      setMessage('');
+    }
   };
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: "url('/assets/back.png')" }}>
-      <header className="absolute top-0 left-0 w-full z-10 bg-gray-800 bg-opacity-50 p-4">
-        <div className="container mx-auto flex justify-between items-center">
-          <Link to="/" className="text-2xl font-bold text-white">
-            Djerba Dream Land
-          </Link>
-          <nav>
-            <ul className="flex space-x-4">
-              <li><Link to="/" className="hover:text-green-500 transition duration-300 text-white">Home</Link></li>
-              <li><Link to="/houses" className="hover:text-green-500 transition duration-300 text-white">House Rental</Link></li>
-              <li><Link to="/cars" className="hover:text-green-500 transition duration-300 text-white">Car Rental</Link></li>
-              <li><Link to="/activities" className="hover:text-green-500 transition duration-300 text-white">Activities</Link></li>
-              <li><Link to="/cart" className="hover:text-green-500 transition duration-300 text-white flex items-center space-x-1">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5H4M7 13l-2 5a1 1 0 001 1h12a1 1 0 001-1l-2-5M5 21h2M17 21h2M9 21h6" />
-                </svg>
-                <span>Cart</span>
-              </Link></li>
-            </ul>
-          </nav>
-        </div>
-      </header>
       <div className="bg-white bg-opacity-70 p-8 rounded shadow-lg max-w-md w-full mt-16 transition duration-500">
-        <h2 className="text-2xl font-bold mb-4">Forgot Password</h2>
+        <h2 className="text-2xl font-bold mb-4">
+          {language === 'en' ? 'Forgot Password' : language === 'fr' ? 'Mot de passe oublié' : 'Passwort vergessen'}
+        </h2>
+        {message && <p className="text-green-500 mb-4">{message}</p>}
+        {error && <p className="text-red-500 mb-4">{error}</p>}
         <form onSubmit={handleForgotPassword}>
           <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              {language === 'en' ? 'Email' : language === 'fr' ? 'Email' : 'E-Mail'}
+            </label>
             <input
               type="email"
               id="email"
@@ -46,10 +57,14 @@ const ForgotPassword = () => {
               required
             />
           </div>
-          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded transition duration-300 hover:bg-blue-700">Reset Password</button>
+          <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded transition duration-300 hover:bg-blue-700">
+            {language === 'en' ? 'Reset Password' : language === 'fr' ? 'Réinitialiser le mot de passe' : 'Passwort zurücksetzen'}
+          </button>
         </form>
         <div className="mt-4">
-          <p><Link to="/login" className="text-blue-600">Back to Login</Link></p>
+          <p><Link to="/login" className="text-blue-600">
+            {language === 'en' ? 'Back to Login' : language === 'fr' ? 'Retour à la connexion' : 'Zurück zum Login'}
+          </Link></p>
         </div>
       </div>
     </div>

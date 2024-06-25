@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
 import { FaSave, FaTimes } from 'react-icons/fa';
 
-const AddItem = ({ category, onAddItem }) => {
+const AddItem = ({ category, activity, onAddItem }) => {
   const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    price: '',
-    location: '',
+    title: activity ? activity.title : '',
+    description: activity ? activity.description : '',
+    price: activity ? activity.price : '',
+    location: activity ? activity.location : '',
     category: category,
-    image: null,
-    rating: 0,
-    availability: { start: '', end: '' },
+    image: activity ? activity.image : null,
   });
 
   const handleChange = (e) => {
@@ -18,7 +16,6 @@ const AddItem = ({ category, onAddItem }) => {
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
-      availability: { ...prevData.availability, [name]: value }
     }));
   };
 
@@ -38,16 +35,6 @@ const AddItem = ({ category, onAddItem }) => {
     } else {
       onAddItem(formData);
     }
-    setFormData({
-      title: '',
-      description: '',
-      price: '',
-      location: '',
-      category: category,
-      image: null,
-      rating: 0,
-      availability: { start: '', end: '' },
-    });
   };
 
   return (
@@ -61,7 +48,7 @@ const AddItem = ({ category, onAddItem }) => {
             name="title"
             value={formData.title}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded text-black"
+            className="w-full p-2 border border-gray-300 rounded"
             required
           />
         </div>
@@ -71,77 +58,45 @@ const AddItem = ({ category, onAddItem }) => {
             name="description"
             value={formData.description}
             onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded text-black"
+            className="w-full p-2 border border-gray-300 rounded"
             required
           />
         </div>
-        <div>
-          <label className="block text-gray-700">Price</label>
-          <input
-            type="number"
-            name="price"
-            value={formData.price}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded text-black"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700">Location</label>
-          <input
-            type="text"
-            name="location"
-            value={formData.location}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded text-black"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700">Rating</label>
-          <input
-            type="number"
-            name="rating"
-            value={formData.rating}
-            onChange={handleChange}
-            min="0"
-            max="5"
-            step="0.1"
-            className="w-full p-2 border border-gray-300 rounded text-black"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700">Availability Start</label>
-          <input
-            type="date"
-            name="start"
-            value={formData.availability.start}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded text-black"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700">Availability End</label>
-          <input
-            type="date"
-            name="end"
-            value={formData.availability.end}
-            onChange={handleChange}
-            className="w-full p-2 border border-gray-300 rounded text-black"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-gray-700">Upload Image</label>
-          <input
-            type="file"
-            name="image"
-            onChange={handleFileChange}
-            className="w-full p-2 border border-gray-300 rounded text-black"
-          />
-        </div>
+        {category === 'activity' && (
+          <>
+            <div>
+              <label className="block text-gray-700">Price</label>
+              <input
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700">Location</label>
+              <input
+                type="text"
+                name="location"
+                value={formData.location}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-gray-700">Upload Image</label>
+              <input
+                type="file"
+                name="image"
+                onChange={handleFileChange}
+                className="w-full p-2 border border-gray-300 rounded"
+              />
+            </div>
+          </>
+        )}
         <div className="flex justify-end space-x-4">
           <button
             type="button"
